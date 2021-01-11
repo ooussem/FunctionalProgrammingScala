@@ -203,11 +203,6 @@ object List {
   // 3.22
   // 3.23
   // TODO: 3.24 Hard
-  // TODO: 3.25
-  // TODO: 3.26
-  // TODO: 3.27
-  // TODO: 3.28
-  // TODO: 3.29
 
 
 

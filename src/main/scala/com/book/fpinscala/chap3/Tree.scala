@@ -18,21 +18,28 @@ object Tree {
 //    }
 //  }
 
-  def size[A](tree: Tree[A]): Int = {
+
+// exo 3.25
+  def size[A](tree: Tree[A], acc: Int): Int = {
     @tailrec
     def go(tree: Tree[A], init: Int) : Int= {
       tree match {
         case Branch(l, _) => go(l, init + 1)
         case Branch(_, r) => go(r, init + 1)
-        case Branch(l, r) => go(r, init + 1)
+        case Branch(l, r) => size(r, init + 1)
         case Leaf(_) => init + 1
       }
     }
-    go(tree, 1)
+    go(tree, acc)
   }
+
+  // TODO: 3.26
+  // TODO: 3.27
+  // TODO: 3.28
+  // TODO: 3.29
 }
 
 object TreeMain extends App {
   val treeTest = Branch(Leaf(3), Branch(Leaf(2), Leaf(1)))
-  println(Tree.size(treeTest))
+  println(Tree.size(treeTest, 0))
 }
