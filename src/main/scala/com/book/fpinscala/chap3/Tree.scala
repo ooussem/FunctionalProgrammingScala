@@ -1,7 +1,5 @@
 package com.book.fpinscala.chap3
 
-import scala.annotation.tailrec
-
 trait Tree[+A]
 case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 case class Leaf[A](value: A) extends Tree[A]
@@ -35,7 +33,14 @@ object Tree {
   }
 
 
-  // TODO: 3.28
+  // exo 3.28
+  def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = {
+    tree match {
+      case Leaf(v) => Leaf(f(v))
+      case Branch(l, r) => Branch(map(l)(f), map(r)(f))
+    }
+  }
+
   // TODO: 3.29
 }
 
@@ -59,7 +64,5 @@ object TreeMain extends App {
   println(Tree.depth(treeTest1)) // 3
   println(Tree.depth(treeTest2)) // 4
   println(Tree.depth(treeTest4)) // 6
-
-
 
 }
