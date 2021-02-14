@@ -20,6 +20,12 @@ object List {
     case Cons(x, xs) => x + sum(xs)
   }
 
+  @tailrec
+  def sumTailRel(ints: List[Int], defaultValue: Int): Int = ints match {
+    case Nil => defaultValue
+    case Cons(x, xs) => sumTailRel(xs, x + defaultValue)
+  }
+
 
   def products(ints: List[Int]): Int = ints match {
     case Nil => 1
