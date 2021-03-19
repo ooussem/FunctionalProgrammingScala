@@ -11,7 +11,7 @@ object Tree {
   // exo 3.25
   def size[A](tree: Tree[A]): Int = {
     tree match {
-      case Branch(left, right) => 1 + size(left) + size(right)
+      case Branch(l, r) => 1 + size(l) + size(r)
       case Leaf(_) => 1
     }
   }
@@ -19,8 +19,8 @@ object Tree {
   // exo 3.26
   def maxInTree(tree: Tree[Int]): Int = {
     tree match {
-      case Leaf(numb) => numb
-      case Branch(left, right) => Integer.max(maxInTree(left), maxInTree(right))
+      case Branch(l, r) => Integer.max(maxInTree(l), maxInTree(r))
+      case Leaf(v) => v
     }
   }
 
@@ -36,12 +36,33 @@ object Tree {
   // exo 3.28
   def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = {
     tree match {
-      case Leaf(v) => Leaf(f(v))
       case Branch(l, r) => Branch(map(l)(f), map(r)(f))
+      case Leaf(v) => Leaf(f(v))
     }
   }
 
-  // TODO: 3.29
+  // exo 3.29
+  def fold[A, B](tree: Tree[A])(functionLeaf: A => B)(functionBranch: (B, B) => B): B = {
+    tree match {
+      case Leaf(v) => functionLeaf(v)
+      case Branch(l, r) => functionBranch(fold(l)(functionLeaf)(functionBranch), fold(r)(functionLeaf)(functionBranch))
+    }
+  }
+
+  def sizeWithFold[A](tree: Tree[A]): Int = {
+    fold(tree)(_ => 1)((leftSize, rightSize) => 1 + leftSize + rightSize) // fold(tree)(_ => 1)(1 + _ + _)
+  }
+
+  def maxInTreeWithFold(tree: Tree[Int]): Int = {
+    fold(tree)(v => v)((leftMax, rightMax) => Integer.max(leftMax, rightMax))
+  }
+
+  def mapWithFold[A, B](tree: Tree[A])(f: A => B): Tree[B] = {
+    fold(tree)(v => Leaf(f(v)).asInstanceOf[Tree[B]])((l, r) => Branch(l, r))
+  }
+
+
+
 }
 
 object TreeMain extends App {
