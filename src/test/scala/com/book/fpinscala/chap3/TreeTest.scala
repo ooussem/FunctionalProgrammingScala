@@ -2,6 +2,7 @@ package com.book.fpinscala.chap3
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import Tree._
 
 class TreeTest extends AnyFunSuite {
   val leafTest = Leaf(1)
@@ -15,6 +16,12 @@ class TreeTest extends AnyFunSuite {
   test("map for Leaf") {
     val treeResult = Tree.map(leafTest)(x => x + 2)
     treeResult shouldEqual Leaf(3)
+  }
+
+  test("test size via fold") {
+    val expected = 8
+    val result = maxInTreeWithFold(treeTest)
+    result shouldEqual expected
   }
 }
 
