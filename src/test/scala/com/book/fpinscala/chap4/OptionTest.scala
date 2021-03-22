@@ -16,7 +16,14 @@ class OptionTest extends AnyFunSuite {
   }
 
   test("flatMap_2 test") {
+    val funcToTest: Int => Int => Option[Int] = x => y => Some(x + y)
 
+    val resExpected: Option[Int] = Some(3)
+
+    val numberOpt: Option[Int] = Some(1)
+
+    val result = numberOpt.flatMap(funcToTest(2))
+    result shouldEqual resExpected
   }
 
 }
