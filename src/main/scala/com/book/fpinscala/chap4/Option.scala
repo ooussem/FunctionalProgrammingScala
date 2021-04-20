@@ -1,7 +1,5 @@
 package com.book.fpinscala.chap4
 
-import com.book.fpinscala.chap4.None.map2
-
 import scala.collection.immutable.List
 
 
@@ -94,6 +92,7 @@ sealed trait Option[+A] {
     optA.flatMap(a => optB flatMap (b => optC.flatMap(c => optD.map(d => f(a, b, c, d)))))
   }
 
+  // exo 4.4
   def sequenceWithFold[A](listOpt: List[Option[A]]): Option[List[A]] = {
     listOpt.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
   }
@@ -106,7 +105,7 @@ object Option {
   object WithChap3List {
 
     import com.book.fpinscala.chap3.{Cons, List, Nil}
-
+    // exo 4.4
     def sequence[A](listOpt: List[Option[A]]): Option[List[A]] = {
       listOpt match {
         case Cons(head, tail) => head flatMap (opt => sequence(tail) map (t => Cons(opt, t)))
@@ -133,13 +132,13 @@ object Option {
       optA.flatMap(a => optB.map(b => f(a, b)))
     }
 
+    // exo 4.4
     def sequence[A](listOpt: List[Option[A]]): Option[List[A]] = {
       listOpt match {
         case head :: tail => head flatMap (opt => sequence(tail) map (t => opt :: t))
         case Nil => Some(Nil)
       }
     }
-
 
     def sequenceWithFold[A](listOpt: List[Option[A]]): Option[List[A]] = {
       listOpt.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
