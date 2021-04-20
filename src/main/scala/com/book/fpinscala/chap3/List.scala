@@ -224,10 +224,10 @@ object ListMain extends App {
   //
   //  println(foldRight(listTest, 0)((x, y) => x + y))
   //
-    println(foldRight(listTest, 1.0)((x, y) => x * y))
+  println(foldRight(listTest, 1.0)((x, y) => x * y))
 
   // 3.8
-  //  println(foldRight(listTest, Nil: List[Int])(Cons(_, _)))
+  println(foldRight(listTest, Nil: List[Int])((x ,y) => Cons(x, y)))
 
   //  println(listTest)
 
