@@ -47,4 +47,12 @@ class OptionTest extends AnyFunSuite {
     Option.WithScalaList.sequence(listToTest) shouldEqual expected
   }
 
+  test("sequence method test with None") {
+
+    val listToTest: List[Option[Double]] = List(Some(4), None, Some(90), Some(10), Some(3))
+    val expected: Option[List[Double]] = None
+
+    Option.WithScalaList.sequence(listToTest) shouldEqual expected
+  }
+
 }
