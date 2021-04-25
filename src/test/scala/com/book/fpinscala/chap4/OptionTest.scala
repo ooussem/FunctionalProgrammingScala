@@ -55,4 +55,13 @@ class OptionTest extends AnyFunSuite {
     Option.WithScalaList.sequence(listToTest) shouldEqual expected
   }
 
+  test("traverse method"){
+    val listTest: List[Int] = List(1, 2, 3)
+    val funcToTest: Int => Option[String] = x => Some(x.toString)
+
+    val expected: Option[List[String]] = Some(List("1", "2", "3"))
+
+    Option.WithScalaList.traverse(listTest)(funcToTest) shouldEqual expected
+  }
+
 }

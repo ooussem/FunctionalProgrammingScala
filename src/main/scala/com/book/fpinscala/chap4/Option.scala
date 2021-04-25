@@ -1,6 +1,11 @@
 package com.book.fpinscala.chap4
 
+import com.book.fpinscala.chap4.None.map
+
+import scala.::
+import scala.collection.IterableOnce.iterableOnceExtensionMethods
 import scala.collection.immutable.List
+import scala.util.Try
 
 
 sealed trait Option[+A] {
@@ -117,7 +122,6 @@ object Option {
       def map2[A, B, C](optA: Option[A], optB: Option[B])(f: (A, B) => C): Option[C] = {
         optA.flatMap(a => optB.map(b => f(a, b)))
       }
-
       List.foldRight(listOpt, Some(Nil): Option[List[A]])((optA, list) => optA.flatMap(a => list.map(l => Cons(a, l))))
       List.foldRight(listOpt, Some(Nil): Option[List[A]])((optA, list) => map2(optA, list)(Cons(_, _)))
     }
@@ -143,6 +147,25 @@ object Option {
     def sequenceWithFold[A](listOpt: List[Option[A]]): Option[List[A]] = {
       listOpt.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x, y)(_ :: _))
     }
+
+//    def parseInt(listInt: List[String]): Option[List[Int]] = {
+//      sequence(listInt.map(i => Try(i.toInt)))
+//    }
+
+    // exo 4.5
+    def traverse[A,B](list: List[A])(f: A => Option[B]): Option[List[B]] = {
+      list match {
+        case Nil => Some(Nil)
+//        case a :: as => f(a) flatMap (b => traverse(as)(f) map (listB => b :: listB))
+        case a :: as => map2(f(a), traverse(as)(f))(_ :: _)
+      }
+    }
+
+    def traverseWithFoldRight[A,B](list: List[A])(f: A => Option[B]): Option[List[B]] = {
+      list.foldRight(Some(Nil): Option[List[B]])((h, t) => map2(f(h), t)(_ :: _))
+    }
+
+
   }
 
 }
