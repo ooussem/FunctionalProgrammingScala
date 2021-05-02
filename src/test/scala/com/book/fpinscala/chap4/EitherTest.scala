@@ -1,5 +1,6 @@
 package com.book.fpinscala.chap4
 
+import com.book.fpinscala.chap4.EitherComp.{Age, Name, Person, mkPerson, mkPersonWithMultiLeft}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
@@ -55,6 +56,28 @@ class EitherTest extends AnyFunSuite {
     val expectedResult: Either[Exception, List[String]] = Right(List("4", "8"))
 
     EitherComp.traverse(eitherTest)(functionTest) shouldEqual expectedResult
+  }
+
+  test("mkPerson() test pass") {
+    val expectedResult: Either[String, Person] = Right(Person(Name("toto"), Age(28)))
+
+    mkPerson("toto", 28) shouldEqual expectedResult
+  }
+
+  test("mkPerson() test fail name") {
+    mkPerson("", 28) shouldEqual Left("Name is empty.")
+  }
+
+  test("mkPerson() test fail name and age but with the first Left") {
+    mkPerson("", -5) shouldEqual Left("Name is empty.")
+  }
+
+  test("mkPerson() test fail age") {
+    mkPerson("toto", -5) shouldEqual Left("Age is out of range.")
+  }
+
+  test("mkPersonWithMultiLeft() test success") {
+    mkPersonWithMultiLeft("", -5)(Person(Name("X"), Age(-1))) shouldEqual MultiLeft(Seq("Name is empty.", "Age is out of range."))
   }
 
 }
