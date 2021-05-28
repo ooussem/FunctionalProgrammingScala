@@ -8,24 +8,24 @@ sealed trait Stream[+A] {
   import Stream._
 
   def headOption: Option[A] = this match {
+    case Cons(h, _) => Some(h())
     case Empty => None
-    case Cons(h, t) => Some(h())
   }
 
 
   // exo 5.1
   // stackoverflow with large list
   def toList: List[A] = this match {
-    case _ => List()
     case Cons(h, t) => h() :: t().toList
+    case _ => List()
   }
 
   def toListTailRec: List[A] = {
     @tailrec
     def go(stream: Stream[A], accList: List[A]): List[A] = {
       stream match {
-        case _ => accList
         case Cons(h, t) => go(t(), h() :: accList)
+        case _ => accList
       }
     }
 
@@ -39,11 +39,11 @@ sealed trait Stream[+A] {
     @tailrec
     def go(stream: Stream[A]): List[A] = {
       stream match {
-        case _ => buf.toList
         case Cons(h, t) => {
           buf += h()
           go(t())
         }
+        case _ => buf.toList
       }
     }
 
@@ -54,8 +54,8 @@ sealed trait Stream[+A] {
   def take(n: Int): Stream[A] = {
     def go(stream: Stream[A], acc: Int): Stream[A] = {
       stream match {
-        case _ => Stream.empty
         case Cons(h, t) if acc > 0 => cons(h(), t().take(n - 1))
+        case _ => Stream.empty
       }
     }
 
@@ -64,8 +64,8 @@ sealed trait Stream[+A] {
 
   @tailrec
   final def drop(n: Int): Stream[A] = this match {
-    case _ => this
     case Cons(_, t) if n > 0 => t().drop(n - 1)
+    case _ => this
   }
 
   // exo 5.3
