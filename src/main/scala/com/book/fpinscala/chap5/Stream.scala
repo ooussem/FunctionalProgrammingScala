@@ -35,7 +35,6 @@ sealed trait Stream[+A] {
 
   def toListTailRecFast: List[A] = {
     val buf = new ListBuffer[A]
-
     @tailrec
     def go(stream: Stream[A]): List[A] = {
       stream match {
@@ -73,12 +72,45 @@ sealed trait Stream[+A] {
     @tailrec
     def go(stream: Stream[A], streamAcc: Stream[A]): Stream[A] = {
       stream match {
-        case Cons(h, t) => if (p(h())) go(t(), cons(h(), t())) else streamAcc
-        case _ => empty
+        case Cons(h, t) if p(h()) =>  go(t(), cons(h(), streamAcc))
+        case _ => streamAcc
       }
     }
     go(this, empty[A])
   }
+
+
+  def takeWhileGitHubSol(f: A => Boolean): Stream[A] = this match {
+    case Cons(h,t) if f(h()) => cons(h(), t().takeWhileGitHubSol(f))
+    case _ => empty
+  }
+
+
+  def foldRight[B](default: => B)(f: (A, => B) => B): B = this match {
+    case Cons(h, t) => f(h(), t().foldRight(default)(f))
+    case _ => default
+  }
+
+  def exist[B](p: A => Boolean): Boolean = {
+    foldRight(false)((a, b) => p(a) || b)
+  }
+
+  // exo 5.5 def takeWhile with foldRight()
+  def takeWhileWithFoldRight(p: A => Boolean): Stream[A] = {
+    foldRight(empty[A])((a, b) => if(p(a)) cons(a, b) else empty)
+  }
+
+  // exo 5.4
+  def forAll(p: A => Boolean): Boolean = {
+    foldRight(false)((a, b) => p(a) && b)
+  }
+
+  // exo 5.6
+  def headOptionWithFoldRight: Option[A] = {
+    foldRight(None: Option[A])((a, _) => Some(a))
+  }
+
+  // exo 5.7
 
 
 }
