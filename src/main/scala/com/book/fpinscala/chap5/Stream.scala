@@ -32,7 +32,6 @@ sealed trait Stream[+A] {
     go(this, List()).reverse
   }
 
-
   def toListTailRecFast: List[A] = {
     val buf = new ListBuffer[A]
     @tailrec
@@ -111,7 +110,20 @@ sealed trait Stream[+A] {
   }
 
   // exo 5.7
+  def map[B](f: A => B): Stream[B] =
+    foldRight(Stream.empty[B])((a, b) => cons(f(a), b)) // equivalent à f = cons(g(h()), t().foldRight(emptyStream[B])(f)
 
+  def filter(f: A => Boolean): Stream[A] =
+    foldRight(Stream.empty[A])((a, b) => if (f(a)) cons(a, b) else b)
+
+  def appendElement[B >: A](x: => B): Stream[B] =
+    foldRight(Stream.empty[B])((a, b) => cons(x, cons(a, b)))
+
+  def append[B >: A](streamB: => Stream[B]): Stream[B] =
+    foldRight(streamB)((a, b) => cons(a, b))
+
+  def flatMap[B](f: A => Stream[B]): Stream[B] =
+    foldRight(Stream.empty[B])((a, b) => f(a).append(b))
 
 }
 
@@ -131,5 +143,30 @@ object Stream {
   def apply[A](as: A*): Stream[A] = {
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
   }
+
+}
+
+object main extends App {
+  // Lazy in parameter hasn't the same behavior of the lazy val
+  // affect the lazy parameter in the lazy declaration will be delay the evaluation and cache the value
+  def twoCall(b: Boolean, i: => Int): Int = {
+    println("twoCall test")
+    if (b) i + i else 0
+  }
+  println(s"twoCall = ${twoCall(true, { println("Hi!!"); 1 + 41} )}")
+
+  def onceCall(b: Boolean, i: => Int): Int = {
+    println("onceCall test")
+    lazy val j = {println("FLAG1") ; i}
+    println("FLAG2")
+    if (b) j + j else 0
+  }
+  println(s"onceCall = ${onceCall(true, { println("Hi!!"); 1 + 41 } )}")
+
+  def onceWoLazy(b: Boolean, i: Int): Int = {
+    println("onceWoLazy test")
+    if (b) i + i else 0
+  }
+  println(s"maybeTwice = ${onceWoLazy(true, { println("Hi!!"); 1 + 41} )}")
 
 }

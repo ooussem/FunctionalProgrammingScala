@@ -86,6 +86,58 @@ class StreamTest extends AnyFunSuite {
     streamToTest.headOptionWithFoldRight shouldEqual expected
   }
 
+  test("[exo 5.7] test map() with foldRight") {
+    val streamToTest = Stream.apply(1, 2)
+    val streamExpected = Stream.apply("1", "2")
+    streamToTest.map(e => e.toString).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test map() with foldRight with empty stream") {
+    val streamToTest = Stream.empty
+    val streamExpected = Stream.empty
+    streamToTest.map(e => e.toString).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test filter() with foldRight normal case") {
+    val streamToTest = Stream.apply(1, 2)
+    val streamExpected = Stream.apply(2)
+    streamToTest.filter(e => e % 2 == 0).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test filter() with foldRight with empty case") {
+    val streamToTest = Stream.apply(1, 3)
+    val streamExpected = Stream.empty
+    streamToTest.filter(e => e % 2 == 0).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test append() with foldRight normal case") {
+    val toAppend = 2
+    val myStream = Stream.apply(1)
+    val streamExpected = Stream.apply(2, 1)
+    myStream.appendElement(toAppend).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test append() with foldRight with empty stream") {
+    val toAppend = 2
+    val myStream = Stream.empty
+    val streamExpected = Stream.apply(2)
+    myStream.appendElement(toAppend).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test flatMap() with foldRight with normal case") {
+    val streamToTest = Stream.apply(1, 2)
+    val streamExpected = Stream.apply("1", "2")
+    val funcToTry: Int => Stream[String] = x => Stream.cons(x.toString, Stream.empty)
+    streamToTest.flatMap(funcToTry).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test flatMap() with foldRight with empty case") {
+    val streamToTest = Stream.empty
+    val streamExpected = Stream.empty
+    val funcToTry: Int => Stream[String] = x => Stream.cons(x.toString, Stream.empty)
+    streamToTest.flatMap(funcToTry).toList shouldEqual streamExpected.toList
+  }
+
 
 
 }
