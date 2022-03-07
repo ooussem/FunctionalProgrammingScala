@@ -110,18 +110,25 @@ class StreamTest extends AnyFunSuite {
     streamToTest.filter(e => e % 2 == 0).toList shouldEqual streamExpected.toList
   }
 
-  test("[exo 5.7] test append() with foldRight normal case") {
+  test("[exo 5.7] test appendElement() with foldRight normal case") {
     val toAppend = 2
     val myStream = Stream.apply(1)
     val streamExpected = Stream.apply(2, 1)
     myStream.appendElement(toAppend).toList shouldEqual streamExpected.toList
   }
 
-  test("[exo 5.7] test append() with foldRight with empty stream") {
+  test("[exo 5.7] test appendElement() with foldRight with empty stream") {
     val toAppend = 2
     val myStream = Stream.empty
     val streamExpected = Stream.apply(2)
     myStream.appendElement(toAppend).toList shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.7] test append() with foldRight normal case") {
+    val streamToAppend = Stream.cons(2, Stream.empty)
+    val myStream = Stream.apply(1)
+    val streamExpected = Stream.apply(1, 2)
+    myStream.append(streamToAppend).toList shouldEqual streamExpected.toList
   }
 
   test("[exo 5.7] test flatMap() with foldRight with normal case") {
