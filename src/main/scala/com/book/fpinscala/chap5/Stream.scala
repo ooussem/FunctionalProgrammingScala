@@ -125,6 +125,11 @@ sealed trait Stream[+A] {
   def flatMap[B](f: A => Stream[B]): Stream[B] =
     foldRight(Stream.empty[B])((a, b) => f(a).append(b))
 
+  def find(p: A => Boolean): Option[A] = {
+    filter(p).headOption
+  }
+
+
 }
 
 case object Empty extends Stream[Nothing]
@@ -143,6 +148,22 @@ object Stream {
   def apply[A](as: A*): Stream[A] = {
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
   }
+
+  // exo 5.8
+  def constant[A](a: A): Stream[A] = {
+    Stream.cons(a, constant(a))
+  }
+
+  def constantEfficient[A](a: A): Stream[A] = {
+    lazy val tail: Stream[A] = Cons(() => a, () => tail)
+    tail
+  }
+
+  // exo 5.9
+  def from(n: Int): Stream[Int] = {
+    cons(n, from(n+1))
+  }
+
 
 }
 
@@ -168,5 +189,6 @@ object main extends App {
     if (b) i + i else 0
   }
   println(s"maybeTwice = ${onceWoLazy(true, { println("Hi!!"); 1 + 41} )}")
+
 
 }

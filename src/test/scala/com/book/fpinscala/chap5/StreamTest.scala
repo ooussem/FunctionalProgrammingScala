@@ -145,6 +145,12 @@ class StreamTest extends AnyFunSuite {
     streamToTest.flatMap(funcToTry).toList shouldEqual streamExpected.toList
   }
 
+  test("test find() with filter") {
+    val myStream = Stream.apply(1, 2)
+    val expected = Option(2)
+    myStream.find(_ % 2 == 0) shouldEqual expected
+  }
+
 
 
 }
