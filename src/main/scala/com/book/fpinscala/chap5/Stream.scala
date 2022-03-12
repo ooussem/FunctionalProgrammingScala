@@ -119,8 +119,8 @@ sealed trait Stream[+A] {
   def appendElement[B >: A](x: => B): Stream[B] =
     foldRight(Stream.empty[B])((a, b) => cons(x, cons(a, b)))
 
-  def append[B >: A](streamB: => Stream[B]): Stream[B] =
-    foldRight(streamB)((a, b) => cons(a, b))
+  def append[B >: A](otherStream: => Stream[B]): Stream[B] =
+    foldRight(otherStream)((a, b) => cons(a, b))
 
   def flatMap[B](f: A => Stream[B]): Stream[B] =
     foldRight(Stream.empty[B])((a, b) => f(a).append(b))
@@ -162,6 +162,21 @@ object Stream {
   // exo 5.9
   def from(n: Int): Stream[Int] = {
     cons(n, from(n+1))
+  }
+
+
+  def fibs(stream: Stream[Int], beforeLast: Int = 0, acc: Int = 1): Stream[Int] = {
+    stream match {
+      case Empty => Stream(acc)
+      case Cons(h, t) => stream.append(fibs(t(), h(), h() + acc))
+    }
+  }
+
+  def fibsSolution: Stream[Int] = {
+    def go(a: Int, b: Int): Stream[Int] = {
+      cons(a, go(b, b + a))
+    }
+    go(0, 1)
   }
 
 

@@ -151,6 +151,32 @@ class StreamTest extends AnyFunSuite {
     myStream.find(_ % 2 == 0) shouldEqual expected
   }
 
+  test("test fibs()") {
+    val expectedStream = Stream(0, 1, 1, 2, 3, 5, 8, 13)
+    Stream.fibs(Stream(0, 1)).take(8).toList shouldEqual expectedStream.toList
+  }
+
+  test("test fibsSolution()") {
+    val expectedStream = Stream(0, 1, 1, 2, 3, 5, 8, 13)
+    Stream.fibsSolution.take(8).toList shouldEqual expectedStream.toList
+  }
+
+  test("test next Fibo number") {
+    def nextF(stream: Stream[Int], beforeLast: Int = 0, acc: Int = 1): Int = {
+      stream match {
+        case Empty => acc - beforeLast
+        case Cons(h, t) => nextF(t(), h(), h() + acc)
+      }
+    }
+
+    nextF(Stream(0, 1)) shouldEqual 1
+    nextF(Stream(0, 1, 1)) shouldEqual 2
+    nextF(Stream(0, 1, 1, 2)) shouldEqual 3
+    nextF(Stream(0, 1, 1, 2, 3)) shouldEqual 5
+    nextF(Stream(0, 1, 1, 2, 3, 5)) shouldEqual 8
+    nextF(Stream(0, 1, 1, 2, 3, 5, 8)) shouldEqual 13
+  }
+
 
 
 }
