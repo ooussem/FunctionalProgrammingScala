@@ -153,7 +153,7 @@ class StreamTest extends AnyFunSuite {
 
   test("test fibs()") {
     val expectedStream = Stream(0, 1, 1, 2, 3, 5, 8, 13)
-    Stream.fibs(Stream(0, 1)).take(8).toList shouldEqual expectedStream.toList
+    Stream.fibsNotWork(Stream(0, 1)).take(8).toList shouldEqual expectedStream.toList
   }
 
   test("test fibsSolution()") {
@@ -176,6 +176,30 @@ class StreamTest extends AnyFunSuite {
     nextF(Stream(0, 1, 1, 2, 3, 5)) shouldEqual 8
     nextF(Stream(0, 1, 1, 2, 3, 5, 8)) shouldEqual 13
   }
+
+  test("[exo 5.11] fibs with unfold") {
+    val expectedStream = Stream(0, 1, 1, 2, 3, 5, 8, 13)
+    Stream.fibsWithUnfold.take(8).toList shouldEqual expectedStream.toList
+  }
+
+  test("from") {
+    val myStream = Stream.from(2)
+    myStream.take(3).toList shouldEqual Stream(2, 3, 4).toList
+  }
+
+  test("fromWithUnfold") {
+    val myStream = Stream.fromWithUnfold(2)
+    myStream.take(3).toList shouldEqual Stream(2, 3, 4).toList
+  }
+
+  test("constantWithUnfold") {
+    Stream.constantWithUnfold("toto").take(3).toList shouldEqual Stream("toto", "toto", "toto").toList
+  }
+
+  test("oneWithUnfold") {
+    Stream.oneWithUnfold.take(3).toList shouldEqual Stream(1, 1, 1).toList
+  }
+
 
 
 

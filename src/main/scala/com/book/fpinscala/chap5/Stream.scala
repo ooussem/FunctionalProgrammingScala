@@ -151,7 +151,7 @@ object Stream {
 
   // exo 5.8
   def constant[A](a: A): Stream[A] = {
-    Stream.cons(a, constant(a))
+    cons(a, constant(a))
   }
 
   def constantEfficient[A](a: A): Stream[A] = {
@@ -164,11 +164,11 @@ object Stream {
     cons(n, from(n+1))
   }
 
-
-  def fibs(stream: Stream[Int], beforeLast: Int = 0, acc: Int = 1): Stream[Int] = {
+  // TODO: Try again
+  def fibsNotWork(stream: Stream[Int], beforeLast: Int = 0, acc: Int = 1): Stream[Int] = {
     stream match {
-      case Empty => Stream(acc)
-      case Cons(h, t) => stream.append(fibs(t(), h(), h() + acc))
+      case Empty => fibsNotWork(stream)
+      case Cons(h, t) => stream.append(fibsNotWork(t(), h(), h() + acc))
     }
   }
 
@@ -179,6 +179,31 @@ object Stream {
     go(0, 1)
   }
 
+  // exo 5.11
+  // corecursive function => producer of data whereas recursive function is a consumer of data
+  def unfold[A, S](s: S)(f: S => Option[(A, S)]): Stream[A] = {
+    f(s) match {
+      case Some(value) => cons(value._1, unfold(value._2)(f))
+      case None => Stream.empty
+    }
+  }
+
+  // exo 5.12
+  def fibsWithUnfold: Stream[Int] = {
+    unfold((0, 1))(state => Some((state._1, (state._2, state._1 + state._2))))
+  }
+
+  def fromWithUnfold(n: Int): Stream[Int] = {
+    unfold(n)(state => Some((state, state + 1)))
+  }
+
+  def constantWithUnfold[A](constant: A): Stream[A] = {
+    unfold(constant)(_ => Some((constant, constant)))
+  }
+
+  def oneWithUnfold: Stream[Int] = {
+   constantWithUnfold(1)
+  }
 
 }
 
