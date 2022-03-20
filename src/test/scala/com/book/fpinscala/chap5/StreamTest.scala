@@ -8,9 +8,7 @@ class StreamTest extends AnyFunSuite {
   test("takeWhile() empty result") {
     val streamToTest = Stream.apply(1, 2, 3, 4, 5)
     val func: Int => Boolean = x => x % 2 == 0
-
     val expected = Empty
-
     streamToTest.takeWhile(func) shouldEqual expected
   }
 
@@ -18,9 +16,7 @@ class StreamTest extends AnyFunSuite {
   test("takeWhile() with result") {
     val streamToTest = Stream.apply(2, 4, 5, 6)
     val func: Int => Boolean = x => x % 2 == 0
-
     val expected = Stream.apply(2, 4)
-
     streamToTest.takeWhile(func).toList.reverse shouldEqual expected.toList
   }
 
@@ -28,27 +24,21 @@ class StreamTest extends AnyFunSuite {
   test("takeWhileGitHubSol() with result") {
     val streamToTest = Stream.apply(2, 4, 5, 6)
     val func: Int => Boolean = x => x % 2 == 0
-
     val expected = Stream.apply(2, 4)
-
-    streamToTest.takeWhileGitHubSol(func).toList shouldEqual expected.toList
+    streamToTest.takeWhileBookSolution(func).toList shouldEqual expected.toList
   }
 
   test("takeWhile() with all result") {
     val streamToTest = Stream.apply(2, 4, 6)
     val func: Int => Boolean = x => x % 2 == 0
-
     val expected = Stream.apply(2, 4, 6)
-
     streamToTest.takeWhile(func).toList.reverse shouldEqual expected.toList
   }
 
   test("exist() test") {
     val streamToTest = Stream.apply(1, 2)
     val func: Int => Boolean = x => x % 2 == 0
-
     val expected = true
-
     streamToTest.exist(func) shouldEqual expected
   }
 
@@ -198,6 +188,26 @@ class StreamTest extends AnyFunSuite {
 
   test("oneWithUnfold") {
     Stream.oneWithUnfold.take(3).toList shouldEqual Stream(1, 1, 1).toList
+  }
+
+  test("[exo 5.13] test map() with unfold") {
+    val streamToTest = Stream.apply(1, 2)
+    val streamExpected = Stream.apply("1", "2")
+    streamToTest.mapWithUnfold(e => e.toString).take(2).toList shouldEqual streamExpected.take(2).toList
+  }
+
+  test("[exo 5.13] test take() with unfold") {
+    val streamToTest = Stream.apply(1, 2, 3)
+    val streamExpected = Stream.apply(1, 2)
+    val result = streamToTest.takeWithUnfoldMoreEfficient(2).toList
+    result shouldEqual streamExpected.toList
+  }
+
+  test("[exo 5.13] test takeWhile() with unfold ") {
+    val streamToTest = Stream.apply(2, 4, 5, 6)
+    val func: Int => Boolean = x => x % 2 == 0
+    val expected = Stream.apply(2, 4)
+    streamToTest.takeWhileWithUnfold(func).toList shouldEqual expected.toList
   }
 
 

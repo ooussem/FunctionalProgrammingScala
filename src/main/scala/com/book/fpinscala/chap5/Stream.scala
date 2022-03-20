@@ -56,7 +56,6 @@ sealed trait Stream[+A] {
         case _ => Stream.empty
       }
     }
-
     go(this, n)
   }
 
@@ -79,8 +78,8 @@ sealed trait Stream[+A] {
   }
 
 
-  def takeWhileGitHubSol(f: A => Boolean): Stream[A] = this match {
-    case Cons(h,t) if f(h()) => cons(h(), t().takeWhileGitHubSol(f))
+  def takeWhileBookSolution(f: A => Boolean): Stream[A] = this match {
+    case Cons(h,t) if f(h()) => cons(h(), t().takeWhileBookSolution(f))
     case _ => empty
   }
 
@@ -127,6 +126,56 @@ sealed trait Stream[+A] {
 
   def find(p: A => Boolean): Option[A] = {
     filter(p).headOption
+  }
+
+  // exo 5.11
+  // corecursive function => producer of data whereas recursive function is a consumer of data
+  def unfold[T, S](s: S)(f: S => Option[(T, S)]): Stream[T] = {
+    f(s) match {
+      case Some(value) => cons(value._1, unfold(value._2)(f))
+      case None => Stream.empty
+    }
+  }
+
+  def mapWithUnfold[B](f: A => B): Stream[B] = {
+    unfold(this) {
+      case Cons(h, t) => Some((f(h()), t()))
+      case _ => None
+    }
+  }
+
+  // This solutions is correct but not efficient because when i==n we call again the tail (and we needn't it) and we increment again (computation useless)
+  def takeWithUnfold(n: Int): Stream[A] = {
+    unfold((this, 1)) { // My State is a tuple of Stream and number
+      case (Cons(h, t), i) if i <= n => Some((h(), (t(), i+1)))
+      case _ => None
+    }
+  }
+
+  def takeWithUnfoldMoreEfficient(n: Int): Stream[A] = {
+    unfold((this, 1)) {
+      case (Cons(h, _), i) if i == n => Some((h(), (empty, n+1))) // we process again n + 1 :(
+      case (Cons(h, t), i) if i < n => Some((h(), (t(), i+1)))
+      case _ => None
+    }
+  }
+
+  def takeViaUnfoldSolutionBook(n: Int): Stream[A] =
+    unfold((this, n)) {
+      case (Cons(h, _), 1) => Some((h(), (empty, 0))) // => more efficient because we just evaluate what we want and no need of incrementation
+      case (Cons(h, t), n) if n > 1 => Some((h(), (t(), n-1)))
+      case _ => None
+    }
+
+  def takeWhileWithUnfold(p: A => Boolean): Stream[A] = {
+    unfold(this) {
+      case Cons(h, t) if p(h()) => Some((h(), t()))
+      case _ => None
+    }
+  }
+
+  def zipWith() = {
+
   }
 
 

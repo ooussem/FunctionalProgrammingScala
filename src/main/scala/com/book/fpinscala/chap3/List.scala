@@ -179,8 +179,10 @@ object List {
     foldLeft(list, List[A]())((acc, head) => Cons(head, acc))
   }
 
-  // 3.13 Hard
-
+  // TODO: 3.13 Hard
+  def foldLeftWithFoldRight[A, B](list: List[A])(f: A => B): List[B] = {
+   Nil
+  }
 
   // 3.14
   def appendWithFoldLeft[A](l1: List[A], l2: List[A]): List[A] = {
@@ -193,8 +195,10 @@ object List {
 
 
   // TODO: 3.15 Hard
+
   // 3.16
   // 3.17
+
   // 3.18
   def map[A, B](list: List[A])(f: A => B): List[B] = {
     list match {
@@ -203,11 +207,23 @@ object List {
     }
   }
 
-  // TODO: 3.19
+  // exo 3.19
+  def filter[A](list: List[A])(p: A => Boolean): List[A] = {
+    list match {
+      case Cons(head, tail) if p(head) => Cons(head, filter(tail)(p))
+      case Nil => Nil
+    }
+  }
+
+  def filterWithFoldRight[A](list: List[A])(p: A => Boolean): List[A] =
+    foldRight(list, Nil: List[A])((h, t) => if (p(h)) Cons(h, t) else t)
+
+
+
   // TODO: 3.20
   // TODO: 3.21
-  // 3.22
-  // 3.23
+  // TODO: 3.22
+  // TODO: 3.23
   // TODO: 3.24 Hard
 
 
