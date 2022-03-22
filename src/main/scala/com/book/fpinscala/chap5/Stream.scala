@@ -174,10 +174,12 @@ sealed trait Stream[+A] {
     }
   }
 
+  // TODO
   def zipWith() = {
 
   }
 
+  // TODO: others
 
 }
 
